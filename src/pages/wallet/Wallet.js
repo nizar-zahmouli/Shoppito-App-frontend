@@ -68,6 +68,8 @@ const Wallet = () => {
   const transactionMessage = useSelector(selectTransactionMessage);
   const transactionss = useSelector(selectTransactions);
   const user = useSelector(selectUser);
+  const { isLoading } = useSelector((state) => state.transaction);
+  // console.log(isLoading);
 
   const [urlParams] = useSearchParams();
   const payment = urlParams.get("payment");
@@ -140,7 +142,8 @@ const Wallet = () => {
       sender: user.email,
       status: "Success",
     };
-    dispatch(transferFund(formData));
+    await dispatch(transferFund(formData));
+    await dispatch(getUser());
   };
 
   const verifyUserAccount = async () => {
@@ -163,17 +166,23 @@ const Wallet = () => {
     if (transactionMessage === "Account Verification Successful") {
       setIsVerified(true);
     }
-  }, [transactionMessage]);
-
-  useEffect(() => {
-    if (user !== null) {
+    if (transactionMessage === "Transaction successful") {
+      setTransferData({ ...initialState });
+      setShowTransferModal(false);
+    }
+    dispatch(RESET_TRANSACTION_MESSAGE());
+  }, [transactionMessage, dispatch]);
+  const getTransac = () => {
+    if (user) {
       const formData = {
         email: user.email,
       };
-
       dispatch(getUserTransactions(formData));
     }
-  }, [dispatch, user]);
+  };
+  useEffect(() => {
+    getTransac();
+  }, [dispatch]);
 
   const makeDeposit = async (e) => {
     e.preventDefault();
@@ -290,6 +299,7 @@ const Wallet = () => {
               onSubmit={transferMoney}
               verifyUserAccount={verifyUserAccount}
               isVerified={isVerified}
+              isLoading={isLoading}
             />
           )}
           {showDepositModal && (

@@ -1,82 +1,68 @@
-import { useEffect, useState } from "react";
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
-import { sliderData } from "./slider-data";
+import React, { useEffect, useState } from 'react';
 import "./Slider.scss";
-import { useNavigate } from "react-router-dom";
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
+import { sliderData } from './slider-data'
+import { useNavigate } from 'react-router-dom'
 
 const Slider = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currrentSlide, setCurrentSlide] = useState(0)
   const slideLength = sliderData.length;
-  //   console.log(slideLength);
-  const navigate = useNavigate();
-
   const autoScroll = true;
   let slideInterval;
-  let intervalTime = 5000;
+  const IntervalTime = 5000
 
+  const navigate = useNavigate
   const nextSlide = () => {
-    setCurrentSlide(currentSlide === slideLength - 1 ? 0 : currentSlide + 1);
+    setCurrentSlide(currrentSlide === slideLength - 1 ? 0 :
+      currrentSlide + 1);
   };
-
   const prevSlide = () => {
-    setCurrentSlide(currentSlide === 0 ? slideLength - 1 : currentSlide - 1);
-  };
-
+    setCurrentSlide(currrentSlide === 0 ? slideLength - 1 :
+      currrentSlide -  1 );
+  }
   useEffect(() => {
-    setCurrentSlide(0);
-  }, []);
-
-  //   const auto = () => {
-  //     slideInterval = setInterval(nextSlide, intervalTime);
-  //   };
-
+    setCurrentSlide(0)
+  },[])
   useEffect(() => {
     if (autoScroll) {
       const auto = () => {
-        slideInterval = setInterval(nextSlide, intervalTime);
-      };
+        slideInterval = setInterval(nextSlide ,IntervalTime)
+      }
       auto();
     }
-    return () => clearInterval(slideInterval);
-  }, [currentSlide, slideInterval, autoScroll]);
-
+    return ()=> clearInterval(slideInterval)
+  },[currrentSlide,IntervalTime,autoScroll])
   return (
-    <div className="slider">
+    <div className='slider'>
       <AiOutlineArrowLeft className="arrow prev" onClick={prevSlide} />
       <AiOutlineArrowRight className="arrow next" onClick={nextSlide} />
-
       {sliderData.map((slide, index) => {
-        const { image, heading, desc } = slide;
+        const { image, heading, desc } = slide
         return (
-          <div
-            key={index}
-            className={index === currentSlide ? "slide current" : "slide"}
-          >
-            {index === currentSlide && (
+          <div key={index} className={index === currrentSlide ? "slide current" : "slide"} >
+            {index === currrentSlide && (
               <>
-                <img src={image} alt="slide" />
-                <div className="content">
-                  <span className="span1"></span>
-                  <span className="span2"></span>
-                  <span className="span3"></span>
-                  <span className="span4"></span>
+                <img src={image} alt="slider" />
+                <div className='content'>
+                  <span className='span1'></span>
+                  <span className='span2'></span>
+                  <span className='span3'></span>
+                  <span className='span4'></span>
                   <h2>{heading}</h2>
                   <p>{desc}</p>
                   <hr />
-                  <button
-                    className="--btn --btn-primary"
-                    onClick={() => navigate("/shop")}
-                  >
+                  <button className='--btn --btn-primary' onClick={
+                    () => navigate("/shop")
+                  }>
                     Shop Now
                   </button>
                 </div>
               </>
             )}
           </div>
-        );
+        )
       })}
     </div>
-  );
-};
-
-export default Slider;
+  )
+}
+export default Slider

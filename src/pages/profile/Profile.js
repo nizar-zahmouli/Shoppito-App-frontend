@@ -1,12 +1,11 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
-import Card from "../../components/card/Card";
+import Card from "../../components/Card/Card";
 
 import "./Profile.scss";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
   getUser,
-  selectUser,
   updatePhoto,
   updateUser,
 } from "../../redux/features/auth/authSlice";
@@ -31,7 +30,12 @@ const Profile = () => {
     email: user?.email || "",
     phone: user?.phone || "",
     role: user?.role || "",
-    address: user?.address || {},
+    photo: user?.photo || "",
+    address: {
+      address: user?.profile?.address || "",
+      state: user?.profile?.state || "",
+      country: user?.profile?.country || "",
+    },
   };
   const [profile, setProfile] = useState(initialState);
   const [profileImage, setProfileImage] = useState(null);
@@ -59,12 +63,12 @@ const Profile = () => {
 
         // Save image to Cloudinary
         const response = await fetch(
-          "https://api.cloudinary.com/v1_1/zinotrust/image/upload",
+          "https://api.cloudinary.com/v1_1/dgxfnzrml/image/upload",
           { method: "post", body: image }
         );
         const imgData = await response.json();
         console.log(imgData);
-        imageURL = imgData.url.toString();
+        imageURL = imgData.URL.toString();
       }
 
       // Save photo to MongoDB
@@ -92,7 +96,12 @@ const Profile = () => {
         email: user.email || "",
         phone: user.phone || "",
         role: user.role || "",
-        address: user.address || {},
+        photo: user.photo || "",
+        address: {
+          address: user?.profile?.address || "",
+          state: user?.profile?.state || "",
+          country: user?.profile?.country || "",
+        },
       });
     }
   }, [user]);
@@ -121,6 +130,7 @@ const Profile = () => {
       toast.error(error.message);
     }
   };
+
   console.log(profile);
   return (
     <>
@@ -146,8 +156,8 @@ const Profile = () => {
                             className="--btn --btn-secondary"
                             onClick={savePhoto}
                           >
-                            <AiOutlineCloudUpload size={18} /> &nbsp; Upload
-                            Photo
+                            <AiOutlineCloudUpload size={18} /> &nbsp;
+                            <h2>Upload Photo </h2>
                           </button>
                         </div>
                       )}
@@ -231,15 +241,14 @@ const Profile = () => {
     </>
   );
 };
-
+//
 export const UserName = () => {
-  const user = useSelector(selectUser);
+  const { user } = useSelector((state) => state.auth);
 
   const username = user?.name || "...";
 
   return (
-    <span style={{ color: "#ff7722" }}>Hi, {shortenText(username, 9)} |</span>
+    <span style={{ color: "#ff7722" }}>Hi,{shortenText(username, 9)} | </span>
   );
 };
-
 export default Profile;

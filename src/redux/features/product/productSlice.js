@@ -18,7 +18,7 @@ const initialState = {
 
 // Create New Product
 export const createProduct = createAsyncThunk(
-  "products/create",
+  "product/createProduct",
   async (formData, thunkAPI) => {
     try {
       return await productService.createProduct(formData);
@@ -36,11 +36,11 @@ export const createProduct = createAsyncThunk(
 );
 
 // Get all products
-export const getProducts = createAsyncThunk(
-  "products/getAll",
+export const getAllProducts = createAsyncThunk(
+  "product/getAllProducts",
   async (_, thunkAPI) => {
     try {
-      return await productService.getProducts();
+      return await productService.getAllProducts();
     } catch (error) {
       const message =
         (error.response &&
@@ -56,7 +56,7 @@ export const getProducts = createAsyncThunk(
 
 // Delete a Product
 export const deleteProduct = createAsyncThunk(
-  "products/delete",
+  "product/deleteProduct",
   async (id, thunkAPI) => {
     try {
       return await productService.deleteProduct(id);
@@ -75,7 +75,7 @@ export const deleteProduct = createAsyncThunk(
 
 // Get a product
 export const getProduct = createAsyncThunk(
-  "products/getProduct",
+  "product/getProduct",
   async (id, thunkAPI) => {
     try {
       return await productService.getProduct(id);
@@ -92,8 +92,9 @@ export const getProduct = createAsyncThunk(
   }
 );
 // Update product
+
 export const updateProduct = createAsyncThunk(
-  "products/updateProduct",
+  "product/updateProduct",
   async ({ id, formData }, thunkAPI) => {
     try {
       return await productService.updateProduct(id, formData);
@@ -109,122 +110,127 @@ export const updateProduct = createAsyncThunk(
     }
   }
 );
-// Review product
-export const reviewProduct = createAsyncThunk(
-  "products/reviewProduct",
-  async ({ id, formData }, thunkAPI) => {
-    try {
-      return await productService.reviewProduct(id, formData);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      console.log(message);
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-// Review product
-export const deleteReview = createAsyncThunk(
-  "products/deleteReview",
-  async ({ id, formData }, thunkAPI) => {
-    try {
-      return await productService.deleteReview(id, formData);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      console.log(message);
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
+// // Review product
+// export const reviewProduct = createAsyncThunk(
+//   "product/reviewProduct",
+//   async ({ id, formData }, thunkAPI) => {
+//     try {
+//       return await productService.reviewProduct(id, formData);
+//     } catch (error) {
+//       const message =
+//         (error.response &&
+//           error.response.data &&
+//           error.response.data.message) ||
+//         error.message ||
+//         error.toString();
+//       console.log(message);
+//       return thunkAPI.rejectWithValue(message);
+//     }
+//   }
+// );
+// // Review product
+// export const deleteReview = createAsyncThunk(
+//   "product/deleteReview",
+//   async ({ id, formData }, thunkAPI) => {
+//     try {
+//       return await productService.deleteReview(id, formData);
+//     } catch (error) {
+//       const message =
+//         (error.response &&
+//           error.response.data &&
+//           error.response.data.message) ||
+//         error.message ||
+//         error.toString();
+//       console.log(message);
+//       return thunkAPI.rejectWithValue(message);
+//     }
+//   }
+// );
 
-// Update Review
-export const updateReview = createAsyncThunk(
-  "products/updateReview",
-  async ({ id, formData }, thunkAPI) => {
-    try {
-      return await productService.updateReview(id, formData);
-    } catch (error) {
-      const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
-        error.message ||
-        error.toString();
-      console.log(message);
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
+// // Update Review
+// export const updateReview = createAsyncThunk(
+//   "product/updateReview",
+//   async ({ id, formData }, thunkAPI) => {
+//     try {
+//       return await productService.updateReview(id, formData);
+//     } catch (error) {
+//       const message =
+//         (error.response &&
+//           error.response.data &&
+//           error.response.data.message) ||
+//         error.message ||
+//         error.toString();
+//       console.log(message);
+//       return thunkAPI.rejectWithValue(message);
+//     }
+//   }
+// );
 
 const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
-    CALC_STORE_VALUE(state, action) {
-      const products = action.payload;
-      const array = [];
-      products.map((item) => {
-        const { price, quantity } = item;
-        const productValue = price * quantity;
-        return array.push(productValue);
-      });
-      const totalValue = array.reduce((a, b) => {
-        return a + b;
-      }, 0);
-      state.totalStoreValue = totalValue;
+    RESET_PROD(state) {
+      state.isError = false;
+      state.isSuccess = false;
+      state.isLoading = false;
+      state.message = "";
     },
-    CALC_OUTOFSTOCK(state, action) {
-      const products = action.payload;
-      const array = [];
-      products.map((item) => {
-        const { quantity } = item;
-
-        return array.push(quantity);
-      });
-      let count = 0;
-      array.forEach((number) => {
-        if (number === 0 || number === "0") {
-          count += 1;
-        }
-      });
-      state.outOfStock = count;
-    },
-    CALC_CATEGORY(state, action) {
-      const products = action.payload;
-      const array = [];
-      products.map((item) => {
-        const { category } = item;
-
-        return array.push(category);
-      });
-      const uniqueCategory = [...new Set(array)];
-      state.category = uniqueCategory;
-    },
-    GET_PRICE_RANGE(state, action) {
-      const { products } = action.payload;
-      const array = [];
-      products.map((product) => {
-        const price = product.price;
-        return array.push(price);
-      });
-      const max = Math.max(...array);
-      const min = Math.min(...array);
-
-      state.minPrice = min;
-      state.maxPrice = max;
-    },
+    //   CALC_STORE_VALUE(state, action) {
+    //     const products = action.payload;
+    //     const array = [];
+    //     products.map((item) => {
+    //       const { price, quantity } = item;
+    //       const productValue = price * quantity;
+    //       return array.push(productValue);
+    //     });
+    //     const totalValue = array.reduce((a, b) => {
+    //       return a + b;
+    //     }, 0);
+    //     state.totalStoreValue = totalValue;
+    //   },
+    //   CALC_OUTOFSTOCK(state, action) {
+    //     const products = action.payload;
+    //     const array = [];
+    //     products.map((item) => {
+    //       const { quantity } = item;
+    //       return array.push(quantity);
+    //     });
+    //     let count = 0;
+    //     array.forEach((number) => {
+    //       if (number === 0 || number === "0") {
+    //         count += 1;
+    //       }
+    //     });
+    //     state.outOfStock = count;
+    //   },
+    //   CALC_CATEGORY(state, action) {
+    //     const products = action.payload;
+    //     const array = [];
+    //     products.map((item) => {
+    //       const { category } = item;
+    //       return array.push(category);
+    //     });
+    //     const uniqueCategory = [...new Set(array)];
+    //     state.category = uniqueCategory;
+    //   },
+    //   GET_PRICE_RANGE(state, action) {
+    //     const { products } = action.payload;
+    //     const array = [];
+    //     products.map((product) => {
+    //       const price = product.price;
+    //       return array.push(price);
+    //     });
+    //     const max = Math.max(...array);
+    //     const min = Math.min(...array);
+    //     state.minPrice = min;
+    //     state.maxPrice = max;
+    // },
   },
   extraReducers: (builder) => {
     builder
+      // create product
+
       .addCase(createProduct.pending, (state) => {
         state.isLoading = true;
       })
@@ -232,9 +238,12 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        console.log(action.payload);
-        state.products.push(action.payload);
-        toast.success("Product added successfully");
+        if (action.payload && action.payload.hasOwnProperty("message")) {
+          toast.error(action.payload.message);
+        } else {
+          state.message = "Product added successfully";
+          toast.success("Product added successfully");
+        }
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.isLoading = false;
@@ -242,22 +251,26 @@ const productSlice = createSlice({
         state.message = action.payload;
         toast.error(action.payload);
       })
-      .addCase(getProducts.pending, (state) => {
+      // get all products
+
+      .addCase(getAllProducts.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getProducts.fulfilled, (state, action) => {
+      .addCase(getAllProducts.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        // console.log(action.payload);
         state.products = action.payload;
+        console.log(action.payload);
       })
-      .addCase(getProducts.rejected, (state, action) => {
+      .addCase(getAllProducts.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
+      // delete product
+
       .addCase(deleteProduct.pending, (state) => {
         state.isLoading = true;
       })
@@ -273,6 +286,9 @@ const productSlice = createSlice({
         state.message = action.payload;
         toast.error(action.payload);
       })
+
+      // get a single  product
+
       .addCase(getProduct.pending, (state) => {
         state.isLoading = true;
       })
@@ -281,6 +297,7 @@ const productSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
         state.product = action.payload;
+        console.log(action.payload);
       })
       .addCase(getProduct.rejected, (state, action) => {
         state.isLoading = false;
@@ -288,6 +305,9 @@ const productSlice = createSlice({
         state.message = action.payload;
         toast.error(action.payload);
       })
+
+      // Update  product
+
       .addCase(updateProduct.pending, (state) => {
         state.isLoading = true;
       })
@@ -295,77 +315,86 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
-        toast.success("Product updated successfully");
+        if (action.payload && action.payload.hasOwnProperty("message")) {
+          toast.error(action.payload.message);
+        } else {
+          state.message = "Product updated successfully";
+          toast.success("Product updated successfully");
+        }
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
-      })
-      .addCase(reviewProduct.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(reviewProduct.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.isError = false;
-        toast.success(action.payload);
-      })
-      .addCase(reviewProduct.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-        toast.error(action.payload);
-      })
-      .addCase(deleteReview.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(deleteReview.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.isError = false;
-        toast.success(action.payload);
-      })
-      .addCase(deleteReview.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-        toast.error(action.payload);
-      })
-      .addCase(updateReview.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(updateReview.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.isError = false;
-        toast.success(action.payload);
-      })
-      .addCase(updateReview.rejected, (state, action) => {
-        state.isLoading = false;
-        state.isError = true;
-        state.message = action.payload;
-        toast.error(action.payload);
       });
+
+     // Review  product
+
+    //       .addCase(reviewProduct.pending, (state) => {
+    //         state.isLoading = true;
+    //       })
+    //       .addCase(reviewProduct.fulfilled, (state, action) => {
+    //         state.isLoading = false;
+    //         state.isSuccess = true;
+    //         state.isError = false;
+    //         toast.success(action.payload);
+    //       })
+    //       .addCase(reviewProduct.rejected, (state, action) => {
+    //         state.isLoading = false;
+    //         state.isError = true;
+    //         state.message = action.payload;
+    //         toast.error(action.payload);
+    //       })
+    //       .addCase(deleteReview.pending, (state) => {
+    //         state.isLoading = true;
+    //       })
+    //       .addCase(deleteReview.fulfilled, (state, action) => {
+    //         state.isLoading = false;
+    //         state.isSuccess = true;
+    //         state.isError = false;
+    //         toast.success(action.payload);
+    //       })
+    //       .addCase(deleteReview.rejected, (state, action) => {
+    //         state.isLoading = false;
+    //         state.isError = true;
+    //         state.message = action.payload;
+    //         toast.error(action.payload);
+    //       })
+    //       .addCase(updateReview.pending, (state) => {
+    //         state.isLoading = true;
+    //       })
+    //       .addCase(updateReview.fulfilled, (state, action) => {
+    //         state.isLoading = false;
+    //         state.isSuccess = true;
+    //         state.isError = false;
+    //         toast.success(action.payload);
+    //       })
+    //       .addCase(updateReview.rejected, (state, action) => {
+    //         state.isLoading = false;
+    //         state.isError = true;
+    //         state.message = action.payload;
+    //         toast.error(action.payload);
+    //       });
   },
 });
 
 export const {
-  CALC_STORE_VALUE,
-  CALC_OUTOFSTOCK,
-  CALC_CATEGORY,
-  GET_PRICE_RANGE,
+  RESET_PROD,
+  //   CALC_STORE_VALUE,
+  //   CALC_OUTOFSTOCK,
+  //   CALC_CATEGORY,
+  //   GET_PRICE_RANGE,
 } = productSlice.actions;
 
-export const selectIsLoading = (state) => state.product.isLoading;
 export const selectProduct = (state) => state.product.product;
-export const selectProducts = (state) => state.product.products;
-export const selectTotalStoreValue = (state) => state.product.totalStoreValue;
-export const selectOutOfStock = (state) => state.product.outOfStock;
-export const selectCategory = (state) => state.product.category;
+export const selectIsLoading = (state) => state.product.isLoading;
+// export const selectProducts = (state) => state.product.products;
+// export const selectTotalStoreValue = (state) => state.product.totalStoreValue;
+// export const selectOutOfStock = (state) => state.product.outOfStock;
+// export const selectCategory = (state) => state.product.category;
 
-export const selectMinPrice = (state) => state.product.minPrice;
-export const selectMaxPrice = (state) => state.product.maxPrice;
+// export const selectMinPrice = (state) => state.product.minPrice;
+// export const selectMaxPrice = (state) => state.product.maxPrice;
 
 export default productSlice.reducer;

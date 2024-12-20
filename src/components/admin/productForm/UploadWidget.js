@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Card from "../../card/Card";
+import Card from "../../Card/Card";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
@@ -36,7 +36,7 @@ const UploadWidget = ({ files, setFiles }) => {
   };
   // File upload end
 
-  const url = "https://api.cloudinary.com/v1_1/zinotrust/image/upload";
+  const url = "https://api.cloudinary.com/v1_1/cloudenv/image/upload";
 
   const uploadImages = async () => {
     setUploading(true);
@@ -46,7 +46,7 @@ const UploadWidget = ({ files, setFiles }) => {
     for (let i = 0; i < images.length; i++) {
       let file = images[i];
       formData.append("file", file);
-      formData.append("upload_preset", "mqxbycre");
+      formData.append("upload_preset", "shopitoAPP");
       formData.append("folder", "shopito");
 
       fetch(url, {

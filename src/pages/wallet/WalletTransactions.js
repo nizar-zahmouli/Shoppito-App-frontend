@@ -1,7 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import "./WalletTransactions.scss";
+import ReactPaginate from "react-paginate";
 
 const WalletTransactions = ({ transactions, user }) => {
+  // Begin PAGINATE
+  const itemsPerPage = 10;
+  const [itemOffset, setItemOffset] = useState(0);
+  const endOffset = itemOffset + itemsPerPage;
+  const currentItems = transactions.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(transactions.length / itemsPerPage);
+
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * itemsPerPage) % transactions.length;
+    setItemOffset(newOffset);
+  };
+  // End PAGINATE
   return (
     <div className="wallet-transactions">
       <hr />
@@ -25,7 +38,7 @@ const WalletTransactions = ({ transactions, user }) => {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((transaction, index) => {
+              {currentItems.map((transaction, index) => {
                 const {
                   _id,
                   createdAt,
@@ -55,6 +68,20 @@ const WalletTransactions = ({ transactions, user }) => {
           </table>
         )}
       </div>
+      <ReactPaginate
+        breakLabel="..."
+        nextLabel="Next"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={3}
+        pageCount={pageCount}
+        previousLabel="Prev"
+        renderOnZeroPageCount={null}
+        containerClassName="pagination"
+        pageLinkClassName="page-num"
+        previousLinkClassName="page-num"
+        nextLinkClassName="page-num"
+        activeLinkClassName="activePage"
+      />
     </div>
   );
 };

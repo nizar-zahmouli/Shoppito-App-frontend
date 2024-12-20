@@ -11,9 +11,9 @@ const initialState = {
   message: "",
 };
 
-// Create New Product
+// Create New Coupon
 export const createCoupon = createAsyncThunk(
-  "coupons/create",
+  "coupon/createCoupon",
   async (formData, thunkAPI) => {
     try {
       return await couponService.createCoupon(formData);
@@ -31,11 +31,11 @@ export const createCoupon = createAsyncThunk(
 );
 
 // Get all Coupons
-export const getCoupons = createAsyncThunk(
-  "coupons/getAll",
+export const getAllCoupons = createAsyncThunk(
+  "coupon/getAllCoupons",
   async (_, thunkAPI) => {
     try {
-      return await couponService.getCoupons();
+      return await couponService.getAllCoupons();
     } catch (error) {
       const message =
         (error.response &&
@@ -68,7 +68,7 @@ export const getCoupon = createAsyncThunk(
   }
 );
 
-// Delete a Product
+// Delete a Coupon
 export const deleteCoupon = createAsyncThunk(
   "coupons/delete",
   async (id, thunkAPI) => {
@@ -91,9 +91,9 @@ const couponSlice = createSlice({
   name: "coupon",
   initialState,
   reducers: {
-    REMOVE_COUPON(state, action) {
-      state.coupon = null;
-    },
+    // REMOVE_COUPON(state, action) {
+    //   state.coupon = null;
+    // },
   },
   extraReducers: (builder) => {
     builder
@@ -115,23 +115,23 @@ const couponSlice = createSlice({
         toast.error(action.payload);
       })
       //   Get all coupons
-      .addCase(getCoupons.pending, (state) => {
+      .addCase(getAllCoupons.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getCoupons.fulfilled, (state, action) => {
+      .addCase(getAllCoupons.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
         state.coupons = action.payload;
         console.log(action.payload);
       })
-      .addCase(getCoupons.rejected, (state, action) => {
+      .addCase(getAllCoupons.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
         toast.error(action.payload);
       })
-      //   Get single coupons
+      //   Get single coupon
       .addCase(getCoupon.pending, (state) => {
         state.isLoading = true;
       })
@@ -169,6 +169,6 @@ const couponSlice = createSlice({
   },
 });
 
-export const { REMOVE_COUPON } = couponSlice.actions;
+// export const { REMOVE_COUPON } = couponSlice.actions;
 
 export default couponSlice.reducer;

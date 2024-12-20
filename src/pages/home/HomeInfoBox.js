@@ -1,11 +1,10 @@
 import React from "react";
+import { FaShippingFast } from "react-icons/fa";
 import {
-  BsCartCheck,
+  BsCartCheckFill,
   BsClockHistory,
   BsFillCreditCardFill,
 } from "react-icons/bs";
-import { FaShippingFast } from "react-icons/fa";
-
 const data = [
   {
     icon: <FaShippingFast size={30} color="#8cb4f5" />,
@@ -18,7 +17,7 @@ const data = [
     text: "Make secure payment for your product.",
   },
   {
-    icon: <BsCartCheck size={30} color="#fa82ea" />,
+    icon: <BsCartCheckFill size={30} color="#fa82ea" />,
     heading: "Quality Products",
     text: "We sell products from only tested and proven brands.",
   },
@@ -28,17 +27,17 @@ const data = [
     text: "Get access to support from our exprt support team.",
   },
 ];
-
-const HomeInfoBox = ({ icon, heading, text }) => {
+const HomeInfoBox = () => {
   return (
     <div className="infoboxes --mb2">
       {data.map((item, index) => {
+        const { icon, heading , text } = item;
         return (
           <div className="infobox" key={index}>
-            <div className="icon">{item.icon}</div>
+            <div className="icon">{icon}</div>
             <div className="text">
-              <h4>{item.heading}</h4>
-              <p className="--text-sm">{item.text}</p>
+              <h4>{heading}</h4>
+              <p className="--text-sm">{text}</p>
             </div>
           </div>
         );

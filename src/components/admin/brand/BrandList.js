@@ -6,12 +6,16 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import {
   deleteBrand,
   getBrands,
-  getCategories,
 } from "../../../redux/features/categoryAndBrand/categoryAndBrandSlice";
 
-const BrandList = ({ brands }) => {
-  const { isLoading } = useSelector((state) => state.category);
+const BrandList = () => {
+  const { isLoading  , brands} = useSelector((state) => state.category);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getBrands())
+ } , [dispatch])
+
 
   const confirmDelete = (slug) => {
     confirmAlert({

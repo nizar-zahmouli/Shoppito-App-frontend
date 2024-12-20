@@ -1,17 +1,20 @@
 import axios from "axios";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
-const API_URL = `${BACKEND_URL}/api/products/`;
+const BACKEND_URL = "http://localhost:8000";
+export const API_URL = `${BACKEND_URL}/api/product/`
 
 // Create New Product
 const createProduct = async (formData) => {
-  const response = await axios.post(API_URL, formData);
+  const response = await axios.post(
+    API_URL + "new",
+     formData
+    );
   return response.data;
 };
 
+
 // Get all products
-const getProducts = async () => {
+const getAllProducts = async () => {
   const response = await axios.get(API_URL);
   return response.data;
 };
@@ -52,7 +55,7 @@ const updateReview = async (id, formData) => {
 
 const productService = {
   createProduct,
-  getProducts,
+  getAllProducts,
   getProduct,
   deleteProduct,
   updateProduct,

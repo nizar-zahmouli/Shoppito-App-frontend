@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from "react";
-import Card from "../../card/Card";
+import Card from "../../Card/Card";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../loader/Loader";
 import { toast } from "react-toastify";
 import {
   createBrand,
   getBrands,
-  getCategories,
+  getCategory,
 } from "../../../redux/features/categoryAndBrand/categoryAndBrandSlice";
 
-const CreateCategory = ({ reloadBrands }) => {
+const CreateBrand = () => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getCategories());
+    dispatch(getCategory());
     dispatch(getBrands());
   }, [dispatch]);
   const { isLoading, categories } = useSelector((state) => state.category);
 
-  const saveCat = async (e) => {
+  const saveBrand = async (e) => {
     e.preventDefault();
     if (name.length < 2) {
-      return toast.error("Coupon must be up to 2 characters");
+      return toast.error("brand must be up to 2 characters");
     }
     if (!category) {
       return toast.error("Please add a parent category");
@@ -33,10 +33,9 @@ const CreateCategory = ({ reloadBrands }) => {
       category,
     };
     console.log(formData);
-    dispatch(createBrand(formData));
-    dispatch(getBrands());
+    await dispatch(createBrand(formData));
+    await dispatch(getBrands());
     setName("");
-    reloadBrands();
   };
 
   return (
@@ -51,7 +50,7 @@ const CreateCategory = ({ reloadBrands }) => {
         </p>
         <Card cardClass={"card"}>
           <br />
-          <form onSubmit={saveCat}>
+          <form onSubmit={saveBrand}>
             <label>Brand Name:</label>
             <input
               type="text"
@@ -88,4 +87,4 @@ const CreateCategory = ({ reloadBrands }) => {
   );
 };
 
-export default CreateCategory;
+export default CreateBrand;

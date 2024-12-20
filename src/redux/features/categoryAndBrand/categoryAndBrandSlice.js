@@ -11,17 +11,15 @@ const initialState = {
   message: "",
 };
 
-// Create New Cat
+// create category
 export const createCategory = createAsyncThunk(
-  "category/create",
+  "category/createCategory",
   async (formData, thunkAPI) => {
     try {
       return await categoryAndBrandService.createCategory(formData);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.message && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
       console.log(message);
@@ -30,17 +28,16 @@ export const createCategory = createAsyncThunk(
   }
 );
 
-// Get all Cat
-export const getCategories = createAsyncThunk(
-  "category/getAll",
+// get category
+
+export const getCategory = createAsyncThunk(
+  "category/getCategory",
   async (_, thunkAPI) => {
     try {
-      return await categoryAndBrandService.getCategories();
+      return await categoryAndBrandService.getCategory();
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.message && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
       console.log(message);
@@ -49,17 +46,16 @@ export const getCategories = createAsyncThunk(
   }
 );
 
-// Delete a Cat
+// delete  category
+
 export const deleteCategory = createAsyncThunk(
-  "category/delete",
+  "category/deleteCategory",
   async (slug, thunkAPI) => {
     try {
       return await categoryAndBrandService.deleteCategory(slug);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.message && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
       console.log(message);
@@ -67,7 +63,8 @@ export const deleteCategory = createAsyncThunk(
     }
   }
 );
-// Create New Brand
+
+// create brand
 export const createBrand = createAsyncThunk(
   "category/createBrand",
   async (formData, thunkAPI) => {
@@ -75,9 +72,7 @@ export const createBrand = createAsyncThunk(
       return await categoryAndBrandService.createBrand(formData);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.message && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
       console.log(message);
@@ -86,7 +81,7 @@ export const createBrand = createAsyncThunk(
   }
 );
 
-// Get all Cat
+// get brand
 export const getBrands = createAsyncThunk(
   "category/getBrands",
   async (_, thunkAPI) => {
@@ -94,9 +89,7 @@ export const getBrands = createAsyncThunk(
       return await categoryAndBrandService.getBrands();
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.message && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
       console.log(message);
@@ -104,8 +97,8 @@ export const getBrands = createAsyncThunk(
     }
   }
 );
+// delete  brand
 
-// Delete a Cat
 export const deleteBrand = createAsyncThunk(
   "category/deleteBrand",
   async (slug, thunkAPI) => {
@@ -113,9 +106,7 @@ export const deleteBrand = createAsyncThunk(
       return await categoryAndBrandService.deleteBrand(slug);
     } catch (error) {
       const message =
-        (error.response &&
-          error.response.data &&
-          error.response.data.message) ||
+        (error.message && error.response.data && error.response.data.message) ||
         error.message ||
         error.toString();
       console.log(message);
@@ -124,7 +115,7 @@ export const deleteBrand = createAsyncThunk(
   }
 );
 
-const couponSlice = createSlice({
+const categoryAndBrandSlice = createSlice({
   name: "category",
   initialState,
   reducers: {
@@ -137,7 +128,7 @@ const couponSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // create cat
+      // create category
       .addCase(createCategory.pending, (state) => {
         state.isLoading = true;
       })
@@ -147,6 +138,7 @@ const couponSlice = createSlice({
         state.isError = false;
         console.log(action.payload);
         toast.success("Category Created successfully");
+        // console.log(action.payload);
       })
       .addCase(createCategory.rejected, (state, action) => {
         state.isLoading = false;
@@ -154,24 +146,26 @@ const couponSlice = createSlice({
         state.message = action.payload;
         toast.error(action.payload);
       })
-      //   Get all cat
-      .addCase(getCategories.pending, (state) => {
+      // get category
+      .addCase(getCategory.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getCategories.fulfilled, (state, action) => {
+      .addCase(getCategory.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
         state.isError = false;
         state.categories = action.payload;
-        // console.log(action.payload);
+        console.log(action.payload);
       })
-      .addCase(getCategories.rejected, (state, action) => {
+      .addCase(getCategory.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        toast.error(action.payload);
+        toast.success(action.payload);
       })
-      //   Delete cat
+
+      // delete category
+
       .addCase(deleteCategory.pending, (state) => {
         state.isLoading = true;
       })
@@ -186,7 +180,7 @@ const couponSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        toast.error(action.payload);
+        toast.success(action.payload);
       })
       // create brand
       .addCase(createBrand.pending, (state) => {
@@ -198,6 +192,7 @@ const couponSlice = createSlice({
         state.isError = false;
         console.log(action.payload);
         toast.success("Brand Created successfully");
+        console.log(action.payload);
       })
       .addCase(createBrand.rejected, (state, action) => {
         state.isLoading = false;
@@ -205,7 +200,7 @@ const couponSlice = createSlice({
         state.message = action.payload;
         toast.error(action.payload);
       })
-      //   Get all cat
+      // get brands
       .addCase(getBrands.pending, (state) => {
         state.isLoading = true;
       })
@@ -214,7 +209,8 @@ const couponSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
         state.brands = action.payload;
-        // console.log(action.payload);
+        console.log(action.payload);
+        toast.success(action.payload);
       })
       .addCase(getBrands.rejected, (state, action) => {
         state.isLoading = false;
@@ -222,7 +218,8 @@ const couponSlice = createSlice({
         state.message = action.payload;
         toast.error(action.payload);
       })
-      //   Delete cat
+      // delete brand
+
       .addCase(deleteBrand.pending, (state) => {
         state.isLoading = true;
       })
@@ -237,11 +234,12 @@ const couponSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
-        toast.error(action.payload);
+        toast.success(action.payload);
       });
   },
 });
 
-export const { RESET_CAT } = couponSlice.actions;
+// export const { RESET_CAT } = couponSlice.actions;
+export const { RESET_CAT } = categoryAndBrandSlice.actions;
 
-export default couponSlice.reducer;
+export default categoryAndBrandSlice.reducer;

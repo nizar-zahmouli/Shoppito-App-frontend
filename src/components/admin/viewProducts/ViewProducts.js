@@ -1,56 +1,37 @@
 import React, { useEffect, useState } from "react";
-import "./ViewProducts.scss";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import { AiOutlineEye } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
+import { selectIsLoggedIn } from "../../../redux/features/auth/authSlice";
+import {
+  deleteProduct,
+  getAllProducts,
+} from "../../../redux/features/product/productSlice";
+import "./ViewProducts.scss";
+import Search from "../../search/Search";
+import { Spinner } from "../../loader/Loader";
+import { AiOutlineEye } from "react-icons/ai";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { shortenText } from "../../../utils";
 import ReactPaginate from "react-paginate";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-import { Link } from "react-router-dom";
 
-import {
-  deleteProduct,
-  getProducts,
-} from "../../../redux/features/product/productSlice";
-import Search from "../../search/Search";
-import { Spinner } from "../../loader/Loader";
-import { shortenText } from "../../../utils";
-import { selectIsLoggedIn } from "../../../redux/features/auth/authSlice";
-import {
-  FILTER_BY_SEARCH,
-  selectFilteredProducts,
-} from "../../../redux/features/product/filterSlice";
-
-const ViewProducts = () => {
-  const dispatch = useDispatch();
+const ViewProducts = ({ value}) => {
   const [search, setSearch] = useState("");
+  const dispatch = useDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const { products, isLoading, isError, message } = useSelector(
-    (state) => state.product
-  );
-  const filteredProducts = useSelector(selectFilteredProducts);
-  // console.log(filteredProducts);
+  const { products, isLoading } = useSelector((state) => state.product);
 
   useEffect(() => {
-    if (isLoggedIn === true) {
-      dispatch(getProducts());
+    if (isLoggedIn) {
+      dispatch(getAllProducts());
     }
-
-    if (isError) {
-      console.log(message);
-    }
-  }, [isLoggedIn, isError, message, dispatch]);
-
-  const delProduct = async (id) => {
-    console.log(id);
-    await dispatch(deleteProduct(id));
-    await dispatch(getProducts());
-  };
+  }, [isLoggedIn, dispatch]);
 
   const confirmDelete = (id) => {
     confirmAlert({
       title: "Delete Product",
-      message: "Are you sure you want to delete this product.",
+      message: "Are you sure you want to delete this product?",
       buttons: [
         {
           label: "Delete",
@@ -58,69 +39,72 @@ const ViewProducts = () => {
         },
         {
           label: "Cancel",
-          // onClick: () => alert('Click No')
         },
       ],
     });
   };
 
-  // Begin Pagination
+  // delete product
+  const delProduct = async (id) => {
+    await dispatch(deleteProduct(id));
+    await dispatch(getAllProducts());
+  };
+
+  //begin paginate
   const itemsPerPage = 6;
   const [itemOffset, setItemOffset] = useState(0);
   const endOffset = itemOffset + itemsPerPage;
-  const currentItems = filteredProducts.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(filteredProducts.length / itemsPerPage);
+  const currentItems = products.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(products.length / itemsPerPage);
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % filteredProducts.length;
+    const newOffset = (event.selected * itemsPerPage) % products.length;
+
     setItemOffset(newOffset);
   };
-  // End Pagination
 
-  useEffect(() => {
-    dispatch(FILTER_BY_SEARCH({ products, search }));
-  }, [products, search, dispatch]);
+  //  end paginate
 
   return (
-    <div className="product-list">
-      <div className="table">
-        <div className="--flex-between --flex-dir-column">
-          <span>
-            <h3>All Products</h3>
-            <p>
-              ~ <b>{filteredProducts.length} Products Found</b>
-            </p>
-          </span>
-          <span>
-            <Search
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </span>
+    <section>
+      <div className="product-list">
+        <div className="table">
+          <div className="--flex-between --flex-dir-column">
+            <span>
+              <h3>All Products</h3>
+              <p>
+                ~ <b>{products.length}</b> Products found
+              </p>
+            </span>
+            <span>
+              <Search
+                value={value}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </span>
+          </div>
         </div>
-
         {isLoading && <Spinner />}
 
         <div className="table">
-          {!isLoading && currentItems.length === 0 ? (
-            <p>-- No product found...</p>
+          {!isLoading && products.length === 0 ? (
+            <p>-- No Products Found...</p>
           ) : (
             <table>
               <thead>
                 <tr>
-                  <th>s/n</th>
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Value</th>
-                  <th>Action</th>
+                  <td>s/n</td>
+                  <td>Name</td>
+                  <td>Category</td>
+                  <td>Price</td>
+                  <td>Quantity</td>
+                  <td>Value</td>
+                  <td>Action</td>
                 </tr>
               </thead>
-
               <tbody>
-                {currentItems.map((product, index) => {
-                  const { _id, name, category, price, quantity } = product;
+                {currentItems.map((prod, index) => {
+                  const { _id, name, category, price, quantity } = prod;
                   return (
                     <tr key={_id}>
                       <td>{index + 1}</td>
@@ -137,7 +121,7 @@ const ViewProducts = () => {
                       </td>
                       <td className="icons">
                         <span>
-                          <Link to={`/product-details/${_id}`}>
+                          <Link to="/">
                             <AiOutlineEye size={25} color={"purple"} />
                           </Link>
                         </span>
@@ -147,11 +131,11 @@ const ViewProducts = () => {
                           </Link>
                         </span>
                         <span>
-                          <FaTrashAlt
-                            size={20}
-                            color={"red"}
-                            onClick={() => confirmDelete(_id)}
-                          />
+                            <FaTrashAlt
+                              size={20}
+                              color={"red"}
+                              onClick={() => confirmDelete(_id)}
+                            />
                         </span>
                       </td>
                     </tr>
@@ -163,11 +147,11 @@ const ViewProducts = () => {
         </div>
         <ReactPaginate
           breakLabel="..."
-          nextLabel="Next"
+          nextLabel="next >"
           onPageChange={handlePageClick}
           pageRangeDisplayed={3}
           pageCount={pageCount}
-          previousLabel="Prev"
+          previousLabel="prev"
           renderOnZeroPageCount={null}
           containerClassName="pagination"
           pageLinkClassName="page-num"
@@ -176,7 +160,7 @@ const ViewProducts = () => {
           activeLinkClassName="activePage"
         />
       </div>
-    </div>
+    </section>
   );
 };
 

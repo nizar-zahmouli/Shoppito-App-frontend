@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Card from "../../card/Card";
+import Card from "../../Card/Card";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,26 +9,27 @@ import { toast } from "react-toastify";
 
 const CreateCoupon = () => {
   const [name, setName] = useState("");
-  const [discount, setDiscount] = useState("");
+  const [discount, setDiscount] = useState(0);
   const [expiresAt, setExpiresAt] = useState(new Date());
+
   const { isLoading, coupons } = useSelector((state) => state.coupon);
   const dispatch = useDispatch();
 
   const saveCoupon = async (e) => {
     e.preventDefault();
-    if (name.length < 6) {
-      return toast.error("Coupon must be up to 6 characters");
+    if (name.length < 5) {
+      return toast.error("Coupon must be up to 5 characters")
     }
     const formData = {
       name,
-      discount,
       expiresAt,
-    };
-    // console.log(formData);
-    dispatch(createCoupon(formData));
-    setName("");
-    setDiscount("");
-  };
+      discount,
+    }
+    await dispatch(createCoupon(formData))
+    // await dispatch(getCoupon())
+    setName("")
+  } 
+ 
 
   return (
     <>
@@ -42,7 +43,7 @@ const CreateCoupon = () => {
         </p>
         <Card cardClass={"card"}>
           <br />
-          <form onSubmit={saveCoupon}>
+          <form onSubmit={saveCoupon} >
             <label>Coupon Name:</label>
             <input
               type="text"
@@ -54,7 +55,7 @@ const CreateCoupon = () => {
             />
             <label>Discount %:</label>
             <input
-              type="text"
+              type="number"
               placeholder="Coupon Discount"
               name="discount"
               value={discount}

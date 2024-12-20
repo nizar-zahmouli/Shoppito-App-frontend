@@ -1,125 +1,120 @@
 import React, { useEffect, useState } from "react";
+import "./ProductForm.scss";
+import Card from "../../Card/Card";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import Card from "../../card/Card";
-import "./ProductForm.scss";
 import UploadWidget from "./UploadWidget";
 import { BsTrash } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getBrands,
+  getCategory,
+} from "../../../redux/features/categoryAndBrand/categoryAndBrandSlice";
 
 const ProductForm = ({
-  files,
-  setFiles,
+  saveProduct,
+  isEditing,
   product,
-  productImage,
-  imagePreview,
-  setImagePreview,
+  setProduct,
   description,
   setDescription,
-  handleInputChange,
-  handleImageChange,
-  saveProduct,
-  categories,
-  filteredBrands,
-  isEditing,
+  files,
+  setFiles,
 }) => {
-  const img =
-    "https://res.cloudinary.com/zinotrust/image/upload/v1674999036/nhq5gqr1xecrkipneiup.jpg";
+  const dispatch = useDispatch();
+  const [filteredBrands, setFilteredBrands] = useState([]);
+  const { categories, brands } = useSelector((state) => state.category);
 
-  // useEffect(() => {
-  //   const updateImagePreview = () => {
-  //     // const imagesArray = files.map((file) => {
-  //     //   return file;
-  //     // });
-  //     setImagePreview(files);
-  //   };
-  //   updateImagePreview();
-  // }, [files, setImagePreview]);
+  useEffect(() => {
+    dispatch(getCategory());
+    dispatch(getBrands());
+  }, [dispatch]);
 
-  const removeImage = (image) => {
-    console.log(image);
-    setFiles(files.filter((img, index) => img !== image));
+  // filter Brands based on selectedCategory
+  const filterBrands = (selectedCategory) => {
+    const newBrands = brands.filter(
+      (brand) => brand.category === selectedCategory
+    );
+    setFilteredBrands(newBrands);
   };
 
+  useEffect(() => {
+    filterBrands(product?.category);
+  }, [product?.category]);
+
+  // handleInputChange
+  const handleInputChange = async (e) => {
+    const { name, value } = e.target;
+    setProduct({ ...product, [name]: value });
+  };
+
+  // remove image
+  const removeImage = (image) => {
+    setFiles(files.filter((img ) => img !== image));
+  };
   return (
     <div className="add-product">
       <UploadWidget files={files} setFiles={setFiles} />
-
       <Card cardClass={"card"}>
         <br />
         <form onSubmit={saveProduct}>
-          <label>Product Images:</label>
-          <div className="slide-container">
-            <aside>
-              {files.length > 0 &&
-                files.map((image) => (
-                  <div key={image} className="thumbnail">
-                    <img src={image} alt="productImage" height={100} />
-                    <div>
-                      <BsTrash
-                        size={15}
-                        className="thumbnailIcon"
-                        onClick={() => removeImage(image)}
-                      />
-                    </div>
+          <label>Product Images : </label>
+          <aside>
+            {files.length > 0 &&
+              files.map((image) => (
+                <div key={image} className="thumbnail">
+                  <img src={image} alt="" height={100} />
+                  <div>
+                    <BsTrash
+                      size={25}
+                      className="thumbnailIcon"
+                      onClick={() => removeImage(image)}
+                    />
                   </div>
-                ))}
-              {files.length < 1 && (
-                <p className="--m">No image set for this poduct.</p>
-              )}
-            </aside>
-          </div>
-          <br />
-          <hr />
-          <label>Product Name:</label>
+                </div>
+              ))}
+            {files.length < 1 && (
+              <p className="--m">No image set for this product.</p>
+            )}
+          </aside>
+          <label>Product Name : </label>
           <input
             type="text"
             placeholder="Product name"
             name="name"
             value={product?.name}
             onChange={handleInputChange}
+            required
           />
-
-          <label>Product Category:</label>
+          <label>Product category : </label>
           <select
             name="category"
             value={product?.category}
-            className="form-control"
             onChange={handleInputChange}
           >
             {isEditing ? (
-              <option>{product?.category}</option>
+              <option value={product?.category}>{product?.category}</option>
             ) : (
-              <option>Select Category</option>
+              <option>select category</option>
             )}
             {categories.length > 0 &&
               categories.map((cat) => (
-                <option key={cat._id} value={cat._name}>
+                <option key={cat._id} value={cat.name}>
                   {cat.name}
                 </option>
               ))}
           </select>
-
-          {/* <input
-            type="text"
-            placeholder="Product Category"
-            name="category"
-            value={product?.category}
-            onChange={handleInputChange}
-          /> */}
-
-          <label>Product Brand:</label>
+          <label>Product brand : </label>
           <select
             name="brand"
             value={product?.brand}
-            className="form-control"
             onChange={handleInputChange}
           >
             {isEditing ? (
-              <option>{product?.brand}</option>
+              <option value={product?.brand}>{product?.brand}</option>
             ) : (
-              <option>Select Brand</option>
+              <option>select brand</option>
             )}
-
             {filteredBrands.length > 0 &&
               filteredBrands.map((brand) => (
                 <option key={brand._id} value={brand.name}>
@@ -127,14 +122,7 @@ const ProductForm = ({
                 </option>
               ))}
           </select>
-          {/* <input
-            type="text"
-            placeholder="Brand"
-            name="brand"
-            value={product?.brand}
-            onChange={handleInputChange}
-          /> */}
-          <label>Product Color:</label>
+          <label>Product color : </label>
           <input
             type="text"
             placeholder="Color"
@@ -142,34 +130,31 @@ const ProductForm = ({
             value={product?.color}
             onChange={handleInputChange}
           />
-
-          <label>Regular Price:</label>
+          <label>Regular Price: </label>
           <input
-            type="text"
+            type="number"
             placeholder="Regular Price"
             name="regularPrice"
             value={product?.regularPrice}
             onChange={handleInputChange}
           />
-          <label>Product Price:</label>
+          <label>Product price : </label>
           <input
-            type="text"
-            placeholder="Product Price"
+            type="number"
+            placeholder="Product price"
             name="price"
             value={product?.price}
             onChange={handleInputChange}
           />
-
-          <label>Product Quantity:</label>
+          <label>Product quantity : </label>
           <input
-            type="text"
-            placeholder="Product Quantity"
+            type="number"
+            placeholder="Product quantity"
             name="quantity"
             value={product?.quantity}
             onChange={handleInputChange}
           />
-
-          <label>Product Description:</label>
+          <label>Product description : </label>
           <ReactQuill
             theme="snow"
             value={description}
@@ -177,7 +162,6 @@ const ProductForm = ({
             modules={ProductForm.modules}
             formats={ProductForm.formats}
           />
-
           <div className="--my">
             <button type="submit" className="--btn --btn-primary">
               Save Product
@@ -205,6 +189,9 @@ ProductForm.modules = {
     ["clean"],
   ],
 };
+
+// * Quill editor formats
+
 ProductForm.formats = [
   "header",
   "font",
@@ -214,16 +201,12 @@ ProductForm.formats = [
   "underline",
   "strike",
   "blockquote",
-  "color",
-  "background",
   "list",
   "bullet",
   "indent",
   "link",
-  "video",
   "image",
-  "code-block",
-  "align",
+  "color",
 ];
 
 export default ProductForm;

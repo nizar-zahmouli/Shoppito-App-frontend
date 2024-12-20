@@ -1,24 +1,23 @@
 import React, { useEffect } from "react";
 import CategoryList from "./CategoryList";
 import CreateCategory from "./CreateCategory";
+import "./Category.scss"
 import { useDispatch, useSelector } from "react-redux";
-import { getCategories } from "../../../redux/features/categoryAndBrand/categoryAndBrandSlice";
+import { getCategory } from "../../../redux/features/categoryAndBrand/categoryAndBrandSlice";
 
 const Category = () => {
   const dispatch = useDispatch();
-  const { categories } = useSelector((state) => state.category);
+  // const { categories } = useSelector((state) => state.category);
 
-  const reloadCategory = () => {
-    dispatch(getCategories());
-  };
-  useEffect(() => {
-    dispatch(getCategories());
-  }, [dispatch]);
+  
+  // useEffect(() => {
+  //   dispatch(getCategory());
+  // }, [dispatch]);
 
   return (
     <section>
       <div className="container coupon">
-        <CreateCategory reloadCategory={reloadCategory} />
+        <CreateCategory  />
         <CategoryList />
       </div>
     </section>

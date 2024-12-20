@@ -10,6 +10,7 @@ const TransferModal = ({
   handleAccountChange,
   verifyUserAccount,
   isVerified,
+  isLoading,
 }) => {
   const { account } = transferData;
   const inputRef = useRef(null);
@@ -88,12 +89,28 @@ const TransferModal = ({
                   <button className="--btn --btn-lg cm" onClick={closeModal}>
                     Cancel
                   </button>
-                  <button
+                  {/* <button
                     type="submit"
                     className="--btn --btn-primary --btn-lg"
                   >
                     Send
-                  </button>
+                  </button> */}
+                  {isLoading ? (
+                    <button
+                      type="submit"
+                      className="--btn --btn-primary --btn-lg"
+                      disabled
+                    >
+                      Sending...
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="--btn --btn-primary --btn-lg"
+                    >
+                      Send
+                    </button>
+                  )}
                 </span>
               )}
             </form>

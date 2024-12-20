@@ -4,9 +4,8 @@ import BrandList from "./BrandList";
 import CreateBrand from "./CreateBrand";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  RESET_CAT,
-  getBrands,
-  getCategories,
+  // RESET_CAT,
+  getBrands
 } from "../../../redux/features/categoryAndBrand/categoryAndBrandSlice";
 
 const Brand = () => {
@@ -17,14 +16,11 @@ const Brand = () => {
     dispatch(getBrands());
   }, [dispatch]);
 
-  const reloadBrands = () => {
-    dispatch(getBrands());
-  };
 
   return (
     <section>
       <div className="container coupon">
-        <CreateBrand reloadBrands={reloadBrands} />
+        <CreateBrand  /> 
         <BrandList brands={brands} />
       </div>
     </section>

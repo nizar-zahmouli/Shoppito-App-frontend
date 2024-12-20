@@ -1,11 +1,6 @@
 import React from "react";
 import "./ProductCategory.scss";
 import { useNavigate } from "react-router-dom";
-
-// https://i.ibb.co/fNkBYgr/c3.jpg
-// https://i.ibb.co/5GVkd3m/c1.jpg
-// https://i.ibb.co/nQKLjrW/c2.jpg
-
 const categories = [
   {
     id: 1,
@@ -29,23 +24,25 @@ const Category = ({ title, image }) => {
   return (
     <div className="category">
       <h3>{title}</h3>
-      <img src={image} alt="img" />
-      <button className="--btn" onClick={() => navigate("/shop")}>
-        {"Shop Now >>>"}
+      <img src={image} alt="alt" />
+      <button
+        className="--btn"
+        onClick={() => {
+          navigate("/shop");
+        }}
+      >
+        {"shop Now >>>>"}
       </button>
     </div>
   );
 };
-
 const ProductCategory = () => {
   return (
     <div className="categories">
       {categories.map((cat) => {
-        return (
-          <div key={cat.id} className="--flex-center">
-            <Category title={cat.title} image={cat.image} />
-          </div>
-        );
+        return <div key={cat.id} className="--flex-center">
+          <Category title={cat.title}  image={cat.image}/>
+        </div>;
       })}
     </div>
   );

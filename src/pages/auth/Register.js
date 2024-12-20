@@ -1,34 +1,54 @@
 import { useEffect, useState } from "react";
 import styles from "./auth.module.scss";
 import registerImg from "../../assets/register.png";
-import Card from "../../components/card/Card";
+import Card from "../../components/Card/Card";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/loader/Loader";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { validateEmail } from "../../redux/features/auth/authService";
+import { validateEmail } from "../../utils/index";
 import { RESET_AUTH, register } from "../../redux/features/auth/authSlice";
 
 const initialState = {
   name: "",
   email: "",
+  photo: "",
   password: "",
   cPassword: "",
 };
 
 const Register = () => {
-  const [formData, setFormData] = useState(initialState);
-  const { name, email, password, cPassword } = formData;
-
-  const { isLoading, isLoggedIn, isSuccess, message } = useSelector(
-    (state) => state.auth
-  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  
+  const [formData, setFormData] = useState(initialState);
+  const { name, email, photo, password, cPassword } = formData;
+  
+
+  const { isLoading, isLoggedIn, isSuccess } = useSelector(
+    (state) => state.auth
+  );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+
+  const uploadHandler = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    if (file) {
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setImage(reader.result);
+      };
+    } else {
+      setImage("");
+    }
   };
 
   const registerUser = async (e) => {
@@ -48,9 +68,9 @@ const Register = () => {
     const userData = {
       name,
       email,
+      photo,
       password,
     };
-
     console.log(userData);
     await dispatch(register(userData));
   };
@@ -68,10 +88,15 @@ const Register = () => {
       {isLoading && <Loader />}
       <section className={`container ${styles.auth}`}>
         <Card>
-          <div className={styles.form}>
+          <div className={styles.form} >
             <h2>Register</h2>
-
-            <form onSubmit={registerUser}>
+            <form>
+              <input
+                type="file"
+                accept="image/"
+                name="photo"
+                onChange={uploadHandler}
+              />
               <input
                 type="text"
                 placeholder="Name"
@@ -104,7 +129,11 @@ const Register = () => {
                 value={cPassword}
                 onChange={handleInputChange}
               />
-              <button type="submit" className="--btn --btn-primary --btn-block">
+              <button
+                type="submit"
+                className="--btn --btn-primary --btn-block"
+                onClick={registerUser}
+              >
                 Register
               </button>
             </form>
