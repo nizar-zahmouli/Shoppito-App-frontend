@@ -50,7 +50,6 @@ const ProductFilter = () => {
 
   useEffect(() => {
     dispatch(GET_PRICE_RANGE({ products }));
-    console.log(minPrice, maxPrice);
   }, [dispatch, products]);
 
   const clearFilter = () => {
