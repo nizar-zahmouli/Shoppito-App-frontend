@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import { getCartQuantityById } from "../../../utils";
 import cartService from "./cartService";
 
-const FRONTEND_URL = "https://shoppito-app.vercel.app";
+const FRONTEND_URL = " http://localhost:3000";
 
 // Apply discunt to cart
 function applyDiscount(cartTotalAmount, discountPercentage) {
