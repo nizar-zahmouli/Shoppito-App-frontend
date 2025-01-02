@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Header.module.scss";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaTimes, FaUserCircle } from "react-icons/fa";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RESET_AUTH, logout } from "../../redux/features/auth/authSlice";
 import ShowOnLogin, {
   ShowOnLogout,
 } from "../../components/hiddenLink/hiddenLink";
 import { UserName } from "../profile/Profile";
 import { AdminOnlyLink } from "../../components/adminOnlyRoute/AdminOnlyRoute";
+import {
+  CALCULATE_TOTAL_QUANTITY,
+  selectCartItems,
+  selectCartTotalQuantity,
+} from "../../redux/features/product/cartSlice";
 
 export const logo = (
   <div className={styles.logo}>
@@ -25,6 +30,8 @@ const activeLink = ({ isActive }) => (isActive ? `${styles.active}` : "");
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [scrollPage, setScrollPage] = useState(false);
+  const cartItems = useSelector(selectCartItems);
+  const cartTotalQuantity = useSelector(selectCartTotalQuantity);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -51,12 +58,17 @@ const Header = () => {
 
     navigate("/login");
   };
+
+  useEffect(() => {
+    dispatch(CALCULATE_TOTAL_QUANTITY());
+  }, [dispatch, cartItems]);
+
   const cart = (
     <span className={styles.cart}>
-      <Link to="/cart">
+      <Link to="/Cart">
         cart
         <FaShoppingCart size={20} />
-        <p>0</p>
+        <p>{cartTotalQuantity}</p>
       </Link>
     </span>
   );

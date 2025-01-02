@@ -128,7 +128,7 @@ export const updateProduct = createAsyncThunk(
 //     }
 //   }
 // );
-// // Review product
+// // Delete Review product
 // export const deleteReview = createAsyncThunk(
 //   "product/deleteReview",
 //   async ({ id, formData }, thunkAPI) => {
@@ -214,18 +214,18 @@ const productSlice = createSlice({
     //     const uniqueCategory = [...new Set(array)];
     //     state.category = uniqueCategory;
     //   },
-    //   GET_PRICE_RANGE(state, action) {
-    //     const { products } = action.payload;
-    //     const array = [];
-    //     products.map((product) => {
-    //       const price = product.price;
-    //       return array.push(price);
-    //     });
-    //     const max = Math.max(...array);
-    //     const min = Math.min(...array);
-    //     state.minPrice = min;
-    //     state.maxPrice = max;
-    // },
+      GET_PRICE_RANGE(state, action) {
+        const { products } = action.payload;
+        const array = [];
+        products.map((product) => {
+          const price = product.price;
+          return array.push(price);
+        });
+        const max = Math.max(...array);
+        const min = Math.min(...array);
+        state.minPrice = min;
+        state.maxPrice = max;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -297,7 +297,7 @@ const productSlice = createSlice({
         state.isSuccess = true;
         state.isError = false;
         state.product = action.payload;
-        console.log(action.payload);
+        // console.log(action.payload);
       })
       .addCase(getProduct.rejected, (state, action) => {
         state.isLoading = false;
@@ -384,7 +384,7 @@ export const {
   //   CALC_STORE_VALUE,
   //   CALC_OUTOFSTOCK,
   //   CALC_CATEGORY,
-  //   GET_PRICE_RANGE,
+    GET_PRICE_RANGE,
 } = productSlice.actions;
 
 export const selectProduct = (state) => state.product.product;

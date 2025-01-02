@@ -24,19 +24,16 @@ const filterSlice = createSlice({
       if (sort === "latest") {
         tempProducts = products;
       }
-
       if (sort === "lowest-price") {
         tempProducts = products.slice().sort((a, b) => {
           return a.price - b.price;
         });
       }
-
       if (sort === "highest-price") {
         tempProducts = products.slice().sort((a, b) => {
           return b.price - a.price;
         });
       }
-
       if (sort === "a-z") {
         tempProducts = products.slice().sort((a, b) => {
           return a.name.localeCompare(b.name);
@@ -47,7 +44,6 @@ const filterSlice = createSlice({
           return b.name.localeCompare(a.name);
         });
       }
-
       state.filteredProducts = tempProducts;
     },
     FILTER_BY_CATEGORY(state, action) {
@@ -62,7 +58,7 @@ const filterSlice = createSlice({
       }
       state.filteredProducts = tempProducts;
     },
-    FILTER_BY_BRAND(state, action) {
+    FILTER_BY_BRANDS(state, action) {
       const { products, brand } = action.payload;
       let tempProducts = [];
       if (brand === "All") {
@@ -74,11 +70,11 @@ const filterSlice = createSlice({
     },
     FILTER_BY_PRICE(state, action) {
       const { products, price } = action.payload;
+
       let tempProducts = [];
       tempProducts = products.filter(
         (product) => product.price >= price[0] && product.price <= price[1]
       );
-
       state.filteredProducts = tempProducts;
     },
   },
@@ -88,7 +84,7 @@ export const {
   FILTER_BY_SEARCH,
   SORT_PRODUCTS,
   FILTER_BY_CATEGORY,
-  FILTER_BY_BRAND,
+  FILTER_BY_BRANDS,
   FILTER_BY_PRICE,
 } = filterSlice.actions;
 

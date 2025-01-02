@@ -15,6 +15,12 @@ import Admin from "./pages/admin/Admin";
 import AdminOnlyRoute from "./components/adminOnlyRoute/AdminOnlyRoute";
 import NotFound from "./pages/404/NotFound";
 import Product from "./pages/shop/Product";
+import ProductDetails from "./components/product/productDetails/ProductDetails";
+import Cart from "./pages/cart/Cart";
+import CheckoutDetails from "./pages/checkout/CheckoutDetails";
+import Checkout from "./pages/checkout/Checkout";
+
+
 const App = () => {
   axios.defaults.withCredentials = true;
   const { isLoggedIn, user } = useSelector((state) => state.auth);
@@ -45,6 +51,10 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/shop" element={<Product />} />
+          <Route path="/product-details/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout-details" element={<CheckoutDetails />} />
+          <Route path="/checkout-stripe" element={<Checkout />} />
 
           <Route
             path="/admin/*"

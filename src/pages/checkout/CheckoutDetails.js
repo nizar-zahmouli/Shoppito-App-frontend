@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import styles from "./CheckoutDetails.module.scss";
+import Card from "../../components/Card/Card";
 import { CountryDropdown } from "react-country-region-selector";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import Card from "../../components/card/Card";
 import {
   SAVE_BILLING_ADDRESS,
   SAVE_SHIPPING_ADDRESS,
@@ -10,10 +9,10 @@ import {
   selectPaymentMethod,
   selectShippingAddress,
 } from "../../redux/features/product/checkoutSlice";
-import styles from "./CheckoutDetails.module.scss";
-import CheckoutSummary from "../../components/checkout/checkoutSummary/CheckoutSummary";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import CheckoutSummary from "../../components/checkout/checkoutSummary/CheckoutSummary";
 
 const initialAddressState = {
   name: "",
@@ -27,27 +26,19 @@ const initialAddressState = {
 };
 
 const CheckoutDetails = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [shippingAddress, setShippingAddress] = useState({
     ...initialAddressState,
   });
   const [billingAddress, setBillingAddress] = useState({
     ...initialAddressState,
   });
+
   const paymentMethod = useSelector(selectPaymentMethod);
   const shipAddress = useSelector(selectShippingAddress);
   const billAddress = useSelector(selectBillingAddress);
-
-  useEffect(() => {
-    if (Object.keys(shipAddress).length > 0) {
-      setShippingAddress({ ...shipAddress });
-    }
-    if (Object.keys(billAddress).length > 0) {
-      setBillingAddress({ ...billAddress });
-    }
-  }, [shipAddress, billAddress]);
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleShipping = (e) => {
     const { name, value } = e.target;
@@ -65,28 +56,36 @@ const CheckoutDetails = () => {
     });
   };
 
+  useEffect(() => {
+    if (Object.keys(shipAddress).length > 0) {
+      setShippingAddress({ ...shipAddress });
+    }
+    if (Object.keys(billAddress).length > 0) {
+      setBillingAddress({ ...billAddress });
+    }
+  }, [shipAddress, billAddress]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(SAVE_SHIPPING_ADDRESS(shippingAddress));
     dispatch(SAVE_BILLING_ADDRESS(billingAddress));
+
     if (paymentMethod === "") {
-      toast.info("Please select a payment method!!!")
-      navigate("/cart");
+      toast.info("Please select a payment method !!!")
+      navigate("/cart")
     }
     if (paymentMethod === "stripe") {
-      navigate("/checkout");
+      navigate("/checkout-stripe")
     }
     if (paymentMethod === "flutterwave") {
-      navigate("/checkout-flutterwave");
+      navigate("/checkout-flutterwave")
     }
     if (paymentMethod === "paypal") {
-      navigate("/checkout-paypal");
+      navigate("/checkout-paypal")
     }
     if (paymentMethod === "wallet") {
-      navigate("/checkout-wallet");
-    }
-
-    // return toast.error("No payment method selected");
+      navigate("/checkout-wallet")
+      }
   };
 
   return (
@@ -95,14 +94,15 @@ const CheckoutDetails = () => {
         <h2>Checkout Details</h2>
         <form onSubmit={handleSubmit}>
           <div>
+            {/* shipping Address */}
             <Card cardClass={styles.card}>
-              <h3>Shipping Address</h3>
+              <h3>shipping Address</h3>
               <label>Recipient Name</label>
               <input
                 type="text"
                 placeholder="Recipient Name"
-                required
                 name="name"
+                required
                 value={shippingAddress.name}
                 onChange={(e) => handleShipping(e)}
               />
@@ -110,8 +110,8 @@ const CheckoutDetails = () => {
               <input
                 type="text"
                 placeholder="Address line 1"
-                required
                 name="line1"
+                required
                 value={shippingAddress.line1}
                 onChange={(e) => handleShipping(e)}
               />
@@ -120,37 +120,29 @@ const CheckoutDetails = () => {
                 type="text"
                 placeholder="Address line 2"
                 name="line2"
-                value={shippingAddress.line2}
-                onChange={(e) => handleShipping(e)}
-              />
-              <label>City</label>
-              <input
-                type="text"
-                placeholder="City"
                 required
-                name="city"
-                value={shippingAddress.city}
+                value={shippingAddress.line2}
                 onChange={(e) => handleShipping(e)}
               />
               <label>State</label>
               <input
                 type="text"
                 placeholder="State"
-                required
                 name="state"
+                required
                 value={shippingAddress.state}
                 onChange={(e) => handleShipping(e)}
               />
-              <label>Postal code</label>
+              <label>Postal Code</label>
               <input
                 type="text"
-                placeholder="Postal code"
-                required
+                placeholder="Postal Code"
                 name="postal_code"
+                required
                 value={shippingAddress.postal_code}
                 onChange={(e) => handleShipping(e)}
               />
-              {/* COUNTRY INPUT */}
+              <label>Country</label>
               <CountryDropdown
                 className={styles.select}
                 valueType="short"
@@ -168,21 +160,21 @@ const CheckoutDetails = () => {
               <input
                 type="text"
                 placeholder="Phone"
-                required
                 name="phone"
+                required
                 value={shippingAddress.phone}
                 onChange={(e) => handleShipping(e)}
               />
             </Card>
-            {/* BILLING ADDRESS */}
+            {/* Billing Address */}
             <Card cardClass={styles.card}>
               <h3>Billing Address</h3>
               <label>Recipient Name</label>
               <input
                 type="text"
-                placeholder="Name"
-                required
+                placeholder="Recipient Name"
                 name="name"
+                required
                 value={billingAddress.name}
                 onChange={(e) => handleBilling(e)}
               />
@@ -190,8 +182,8 @@ const CheckoutDetails = () => {
               <input
                 type="text"
                 placeholder="Address line 1"
-                required
                 name="line1"
+                required
                 value={billingAddress.line1}
                 onChange={(e) => handleBilling(e)}
               />
@@ -200,6 +192,7 @@ const CheckoutDetails = () => {
                 type="text"
                 placeholder="Address line 2"
                 name="line2"
+                required
                 value={billingAddress.line2}
                 onChange={(e) => handleBilling(e)}
               />
@@ -207,8 +200,8 @@ const CheckoutDetails = () => {
               <input
                 type="text"
                 placeholder="City"
-                required
                 name="city"
+                required
                 value={billingAddress.city}
                 onChange={(e) => handleBilling(e)}
               />
@@ -216,21 +209,21 @@ const CheckoutDetails = () => {
               <input
                 type="text"
                 placeholder="State"
-                required
                 name="state"
+                required
                 value={billingAddress.state}
                 onChange={(e) => handleBilling(e)}
               />
-              <label>Postal code</label>
+              <label>Postal Code</label>
               <input
                 type="text"
-                placeholder="Postal code"
-                required
+                placeholder="Postal Code"
                 name="postal_code"
+                required
                 value={billingAddress.postal_code}
                 onChange={(e) => handleBilling(e)}
               />
-              {/* COUNTRY INPUT */}
+              <label>Country</label>
               <CountryDropdown
                 className={styles.select}
                 valueType="short"
@@ -248,8 +241,8 @@ const CheckoutDetails = () => {
               <input
                 type="text"
                 placeholder="Phone"
-                required
                 name="phone"
+                required
                 value={billingAddress.phone}
                 onChange={(e) => handleBilling(e)}
               />

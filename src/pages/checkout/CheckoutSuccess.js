@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-  CALCULATE_TOTAL_QUANTITY,
-  CLEAR_CART,
-} from "../../redux/features/product/cartSlice";
+// import {
+//   CALCULATE_TOTAL_QUANTITY,
+//   CLEAR_CART,
+// } from "../../redux/features/product/cartSlice";
 import Confetti from "react-confetti";
 
 const CheckoutSuccess = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(CLEAR_CART());
-    dispatch(CALCULATE_TOTAL_QUANTITY());
-  }, [dispatch]);
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(CLEAR_CART());
+  //   dispatch(CALCULATE_TOTAL_QUANTITY());
+  // }, [dispatch]);
 
   return (
     <>

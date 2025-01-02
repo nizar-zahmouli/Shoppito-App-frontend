@@ -1,23 +1,20 @@
 import React, { useState } from "react";
 import "./VerifyCoupon.scss";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  REMOVE_COUPON,
-  getCoupon,
-} from "../../redux/features/coupon/couponSlice";
-import Card from "./../card/Card";
+import Card from "../Card/Card";
+import { getCoupon, REMOVE_COUPON } from "../../redux/features/coupon/couponSlice";
 
-export const CartDiscount = () => {
+const CartDiscount = () => {
   const { coupon } = useSelector((state) => state.coupon);
-  const { fixedCartTotalAmount } = useSelector((state) => state.cart);
 
+  const { initialCartTotalAmount } = useSelector((state) => state.cart);
   return (
     <>
-      {coupon != null && (
+      {coupon !== null && (
         <Card cardClass={"coupon-msg"}>
           <p className="--center-all">
-            Initial Total: ${fixedCartTotalAmount} | Coupon: {coupon.name} |
-            Discount: {coupon.discount}%
+            Initial Total: ${initialCartTotalAmount} | Coupon: {coupon?.name}{" "}
+            | Discount: {coupon?.discount}% |
           </p>
         </Card>
       )}
@@ -29,19 +26,19 @@ const VerifyCoupon = () => {
   const dispatch = useDispatch();
   const [couponName, setCouponName] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const { coupon, isLoadng } = useSelector((state) => state.coupon);
-  const { cartTotalAmount, fixedCartTotalAmount } = useSelector(
+  const { coupon } = useSelector((state) => state.coupon);
+
+  const { cartTotalAmount, initialCartTotalAmount } = useSelector(
     (state) => state.cart
   );
 
-  const verifyCoupon = async (e) => {
+  const verifyCoupon = (e) => {
     e.preventDefault();
-
-    dispatch(getCoupon(couponName));
+    dispatch(getCoupon(couponName))
   };
 
-  const removeCoupon = async () => {
-    dispatch(REMOVE_COUPON());
+  const removeCoupon = () => {
+    dispatch(REMOVE_COUPON())
   };
 
   return (
@@ -57,13 +54,13 @@ const VerifyCoupon = () => {
             <b>Add Coupon</b>
           </p>
         ) : (
-          <p className="--cursor --color-danger" onClick={removeCoupon}>
+          <p className="--cursor --color-primary" onClick={removeCoupon}>
             <b>Remove Coupon</b>
           </p>
         )}
       </div>
       {showForm && (
-        <form onSubmit={verifyCoupon} className={"coupon-form"}>
+        <form onSubmit={verifyCoupon} className="coupon-form --form-control">
           <input
             type="text"
             placeholder="Coupon name"

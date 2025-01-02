@@ -2,21 +2,25 @@ import React, { useEffect, useState } from "react";
 import styles from "./auth.module.scss";
 import loginImg from "../../assets/login.png";
 import Card from "../../components/Card/Card";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { validateEmail } from "../../utils";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { RESET_AUTH, login } from "../../redux/features/auth/authSlice";
 import Loader from "../../components/loader/Loader";
+import { getCartDB, saveCartDB } from "../../redux/features/product/cartSlice";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { isLoading, isLoggedIn, isSuccess } = useSelector(
     (state) => state.auth
   );
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [urlParams] = useSearchParams();
+  const redirect = urlParams.get("redirect");
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -36,10 +40,18 @@ const Login = () => {
   };
   useEffect(() => {
     if (isSuccess && isLoggedIn) {
-      navigate("/");
+      dispatch(
+        saveCartDB({
+          cartItems: JSON.parse(localStorage.getItem("cartItems")),
+        })
+      );
+      if (redirect === "cart") {
+        return navigate("/cart");
+      }
+      dispatch(getCartDB());
     }
     dispatch(RESET_AUTH());
-  }, [isLoggedIn, isSuccess, dispatch, navigate]);
+  }, [isLoggedIn, isSuccess, dispatch, navigate , redirect]);
 
   return (
     <>

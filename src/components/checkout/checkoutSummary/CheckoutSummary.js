@@ -9,7 +9,7 @@ import {
 } from "../../../redux/features/product/cartSlice";
 
 import styles from "./CheckoutSummary.module.scss";
-import Card from "../../card/Card";
+import Card from "../../Card/Card";
 import { useDispatch } from "react-redux";
 import { CartDiscount } from "../../verifyCoupon/VerifyCoupon";
 
@@ -46,7 +46,7 @@ const CheckoutSummary = () => {
               <h4>Subtotal:</h4>
               <h3>{cartTotalAmount.toFixed(2)}</h3>
             </div>
-            <CartDiscount />
+            {/* <CartDiscount /> */}
             {cartItems.map((item, index) => {
               const { _id, name, price, cartQuantity } = item;
               return (
