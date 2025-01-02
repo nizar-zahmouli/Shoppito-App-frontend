@@ -46,7 +46,7 @@ const Login = () => {
         })
       );
       if (redirect === "cart") {
-        return navigate("/cart");
+        return navigate("/");
       }
       dispatch(getCartDB());
     }
