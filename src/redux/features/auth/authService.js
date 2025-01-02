@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = "https://shopitoapp.onrender.com";
+const BACKEND_URL = "https://shopitoapp.onrender.com/";
 export const API_URL = `${BACKEND_URL}/api/users/`;
 
 // Validate email
@@ -12,7 +12,7 @@ export const API_URL = `${BACKEND_URL}/api/users/`;
 
 // Register User
 const register = async (userData) => {
-  const response = await axios.post('https://shopitoapp.onrender.com/api/users/register', userData, {
+  const response = await axios.post(`${API_URL}/register`, userData, {
     withCredentials: true,
   });
   return response.data;
@@ -20,7 +20,7 @@ const register = async (userData) => {
 
 // Login User
 const login = async (userData) => {
-  const response = await axios.post('https://shopitoapp.onrender.com/api/users/login', userData , {
+  const response = await axios.post(`${API_URL}/login`, userData , {
     withCredentials: true,
   });
   return response.data;
