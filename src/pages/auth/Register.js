@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./auth.module.scss";
 import registerImg from "../../assets/register.png";
-import Card from "../../components/Card/Card";
+import Card from "../../components/card/Card";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../../components/loader/Loader";
 import { toast } from "react-toastify";

@@ -17,10 +17,8 @@ import {
 import styles from "./Cart.module.scss";
 import { FaTrashAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { selectIsLoggedIn } from "../../redux/features/auth/authSlice";
-import Card from "../../components/Card/Card";
+import Card from "../../components/card/Card";
 import "./Radio.scss";
-import { toast } from "react-toastify";
 import VerifyCoupon from "../../components/verifyCoupon/VerifyCoupon";
 import PaymentOptions from "../../components/paymentOptions/PaymentOptions";
 // import {
@@ -31,7 +29,6 @@ import PaymentOptions from "../../components/paymentOptions/PaymentOptions";
 // import VerifyCoupon from "../../components/verifyCoupon/VerifyCoupon";
 
 const Cart = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const cartItems = useSelector(selectCartItems);

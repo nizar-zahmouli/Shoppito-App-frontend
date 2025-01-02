@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Card from "../../Card/Card";
+import Card from "../../card/Card";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch, useSelector } from "react-redux";

@@ -9,7 +9,7 @@ import { getProduct } from "../../../redux/features/product/productSlice";
 import { calculateAverageRating } from "../../../utils";
 import ProductRating from "../productRating/ProductRating";
 import DOMPurify from "dompurify";
-import Card from "../../Card/Card";
+import Card from "../../card/Card";
 import {
   ADD_TO_CART,
   DECREASE_CART,

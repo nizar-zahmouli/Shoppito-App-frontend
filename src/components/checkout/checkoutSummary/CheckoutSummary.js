@@ -9,7 +9,7 @@ import {
 } from "../../../redux/features/product/cartSlice";
 
 import styles from "./CheckoutSummary.module.scss";
-import Card from "../../Card/Card";
+import Card from "../../card/Card";
 import { useDispatch } from "react-redux";
 import { CartDiscount } from "../../verifyCoupon/VerifyCoupon";
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "./CheckoutDetails.module.scss";
-import Card from "../../components/Card/Card";
+import Card from "../../components/card/Card";
 import { CountryDropdown } from "react-country-region-selector";
 import {
   SAVE_BILLING_ADDRESS,

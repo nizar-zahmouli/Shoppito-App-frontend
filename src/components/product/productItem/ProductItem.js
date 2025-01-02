@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ProductItem.module.scss";
-import Card from "../../Card/Card";
+import Card from "../../card/Card";
 import { Link } from "react-router-dom";
 import { calculateAverageRating, shortenText } from "../../../utils/index";
 import { toast } from "react-toastify";

@@ -53,11 +53,11 @@ const ProductFilter = () => {
     console.log(minPrice, maxPrice);
   }, [dispatch, products]);
 
-  const clearFilter =  () => {
-    setCategory("All")
-    setBrand("All")
-    setPrice([minPrice,maxPrice]);
-  }
+  const clearFilter = () => {
+    setCategory("All");
+    setBrand("All");
+    setPrice([minPrice, maxPrice]);
+  };
   return (
     <div className={styles.filter}>
       <h4>Product Filter</h4>

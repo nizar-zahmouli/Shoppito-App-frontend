@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Card from "../../Card/Card";
+import Card from "../../card/Card";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import { BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";

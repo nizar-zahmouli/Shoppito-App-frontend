@@ -1,5 +1,5 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import Card from "../../components/Card/Card";
+import React, { useEffect, useState } from "react";
+import Card from "../../components/card/Card";
 
 import "./Profile.scss";
 
@@ -22,7 +22,7 @@ const Profile = () => {
   // useRedirectLoggedOutUser("/login");
 
   const dispatch = useDispatch();
-  const { isLoading, isLoggedIn, isSuccess, message, user } = useSelector(
+  const { isLoading, user } = useSelector(
     (state) => state.auth
   );
   const initialState = {

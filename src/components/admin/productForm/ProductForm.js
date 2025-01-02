@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./ProductForm.scss";
-import Card from "../../Card/Card";
+import Card from "../../card/Card";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import UploadWidget from "./UploadWidget";
