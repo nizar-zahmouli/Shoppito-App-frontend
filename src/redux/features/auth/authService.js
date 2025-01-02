@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BACKEND_URL = "https://shopitoapp.onrender.com";
+const BACKEND_URL = "https://shopitoapp.onrender.com/";
 export const API_URL = `${BACKEND_URL}/api/users/`;
 
 // Validate email
