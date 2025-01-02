@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   ADD_TO_CART,
@@ -11,22 +11,14 @@ import {
   selectCartTotalAmount,
   CALCULATE_SUBTOTAL,
   saveCartDB,
-  //   CALCULATE_SUBTOTAL,
-  //   saveCartDB,
 } from "../../redux/features/product/cartSlice";
 import styles from "./Cart.module.scss";
 import { FaTrashAlt } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Card from "../../components/card/Card";
 import "./Radio.scss";
 import VerifyCoupon from "../../components/verifyCoupon/VerifyCoupon";
 import PaymentOptions from "../../components/paymentOptions/PaymentOptions";
-// import {
-//   SAVE_PAYMENT_METHOD,
-//   selectPaymentMethod,
-// } from "../../redux/features/product/checkoutSlice";
-// import { getCartQuantityById } from "../../utils";
-// import VerifyCoupon from "../../components/verifyCoupon/VerifyCoupon";
 
 const Cart = () => {
   const dispatch = useDispatch();
