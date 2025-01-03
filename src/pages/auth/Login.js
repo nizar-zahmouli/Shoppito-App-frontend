@@ -19,8 +19,7 @@ const Login = () => {
   const { isLoading, isLoggedIn, isSuccess } = useSelector(
     (state) => state.auth
   );
-  const [urlParams] = useSearchParams();
-  const redirect = urlParams.get("redirect");
+ 
 
   const loginUser = async (e) => {
     e.preventDefault();
@@ -45,9 +44,8 @@ const Login = () => {
           cartItems: JSON.parse(localStorage.getItem("cartItems")),
         })
       );
-      if (redirect === "cart") {
-        return navigate("/");
-      }
+        navigate("/");
+      
       dispatch(getCartDB());
     }
     dispatch(RESET_AUTH());
